@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>README メーカー</title>
+<style>
+:root{--bg:#eef1f4;--panel:#fff;--ink:#17202a;--mute:#5b6773;--line:#d5dbe1;--acc:#0f766e;--acc-ink:#fff;--code:#e8edf1;--chip:#dbeafe;--chip-ink:#1e3a8a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1418;--panel:#182028;--ink:#e6ebef;--mute:#93a0ab;--line:#2b3742;--acc:#2dd4bf;--acc-ink:#04211e;--code:#222d37;--chip:#1e3a5f;--chip-ink:#bfdbfe}}
+:root[data-theme="dark"]{--bg:#0f1418;--panel:#182028;--ink:#e6ebef;--mute:#93a0ab;--line:#2b3742;--acc:#2dd4bf;--acc-ink:#04211e;--code:#222d37;--chip:#1e3a5f;--chip-ink:#bfdbfe}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 "Hiragino Sans","Noto Sans JP","Yu Gothic UI","Segoe UI",sans-serif}
+header{padding:20px 20px 4px;max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between}
+h1{margin:0;font-size:22px;letter-spacing:.02em}
+header p{margin:0;color:var(--mute);font-size:13px}
+main{max-width:1200px;margin:0 auto;padding:12px 20px 40px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:20px;align-items:start}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+.form{display:grid;gap:14px}
+fieldset{margin:0;border:1px solid var(--line);border-radius:6px;background:var(--panel);padding:12px 16px 16px;display:grid;gap:10px}
+legend{padding:0 6px;font-weight:700;font-size:14px}
+label{display:grid;gap:3px;font-size:13px;color:var(--mute)}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;width:100%}
+textarea{resize:vertical;min-height:64px;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:13px;line-height:1.5}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.checks{display:flex;flex-wrap:wrap;gap:6px 16px}
+.checks label{display:flex;gap:6px;align-items:center;color:var(--ink)}
+.checks input{width:auto}
+.out{position:sticky;top:12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+@media (max-width:900px){.out{position:static}}
+.bar{display:flex;gap:4px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tab{border:0;background:none;color:var(--mute);font:inherit;font-weight:600;padding:5px 12px;border-radius:4px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--code);color:var(--ink)}
+.sp{flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit;font-size:13px;padding:5px 12px;border-radius:4px;cursor:pointer}
+.btn.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:700}
+.pane{padding:16px 20px;max-height:78vh;overflow:auto}
+#md{display:block;width:100%;border:0;border-radius:0;min-height:60vh;background:var(--panel);padding:16px 20px;font-size:13px}
+#pv{max-width:none}
+#pv h1,#pv h2{border-bottom:1px solid var(--line);padding-bottom:.25em}
+#pv h1{font-size:1.7em;margin:.2em 0 .5em}#pv h2{font-size:1.3em;margin:1.4em 0 .6em}#pv h3{font-size:1.1em}
+#pv blockquote{margin:.6em 0;padding:0 1em;color:var(--mute);border-left:3px solid var(--line)}
+#pv pre{background:var(--code);padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:13px}
+#pv code{background:var(--code);padding:.1em .35em;border-radius:4px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em}
+#pv pre code{background:none;padding:0}
+#pv a{color:var(--acc)}
+#pv ul,#pv ol{padding-left:1.5em}
+#pv hr{border:0;border-top:1px solid var(--line)}
+.chip{display:inline-block;background:var(--chip);color:var(--chip-ink);border-radius:4px;padding:0 8px;margin:0 4px 4px 0;font-size:12px;font-weight:600}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>README メーカー</h1>
+  <p>入力すると、GitHub 用の README.md がその場で完成します。</p>
+</header>
+<main>
+  <div class="form" id="form"></div>
+  <section class="out" aria-label="出力">
+    <div class="bar">
+      <button class="tab" id="tPv" role="tab" aria-selected="true">プレビュー</button>
+      <button class="tab" id="tMd" role="tab" aria-selected="false">Markdown</button>
+      <span class="sp"></span>
+      <button class="btn" id="bSample">サンプルを入れる</button>
+      <button class="btn" id="bClear">クリア</button>
+      <button class="btn" id="bDl" hidden>README.md をダウンロード</button>
+      <button class="btn pri" id="bCopy">Markdown をコピー</button>
+    </div>
+    <div class="pane" id="pv"></div>
+    <textarea id="md" hidden spellcheck="false" aria-label="Markdown"></textarea>
+  </section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const F='`'.repeat(3);
+const GROUPS=[
+ {t:'基本情報',f:[['name','プロジェクト名','i','my-awesome-app'],['tagline','ひとこと説明','i','何をするものかを一文で'],['desc','概要','t','背景や解決したい課題など']]},
+ {t:'GitHub',f:[['ghUser','ユーザー名 / 組織名','i','yourname'],['repo','リポジトリ名','i','my-awesome-app']],row:true},
+ {t:'内容',f:[['features','特徴（1行に1つ）','t','高速に動作する\n設定ファイル不要'],['stack','使用技術（カンマ区切り）','i','Node.js, TypeScript'],['install','インストール手順（コマンド）','t','npm install'],['usage','使い方（コード）','t','npm start'],['codeLang','使い方のコード言語','i','bash']]},
+ {t:'ライセンス・作者',row:true,f:[['license','ライセンス','s',['MIT','Apache-2.0','GPL-3.0','BSD-3-Clause','ISC','Unlicense','なし']],['author','作者名','i','Your Name']]},
+ {t:'出力設定',f:[['style','スタイル','s',[['standard','標準'],['minimal','ミニマル'],['detailed','詳細（目次つき）']]],['lang','見出しの言語','s',[['ja','日本語'],['en','English']]]],row:true,checks:[['sBadges','バッジ'],['sFeatures','特徴'],['sStack','使用技術'],['sInstall','インストール'],['sUsage','使い方'],['sContrib','コントリビュート'],['sLicense','ライセンス']]}
+];
+const SAMPLE={name:'TaskFlow',tagline:'ターミナルで使えるシンプルなタスク管理ツール',desc:'TaskFlow は、コマンド一行でタスクを追加・確認・完了できる CLI ツールです。データはローカルの SQLite に保存されるため、アカウント登録は不要です。',ghUser:'yourname',repo:'taskflow',features:'コマンド一行でタスクを追加\nタグと期限で絞り込み\nデータはローカルに保存',stack:'Node.js, TypeScript, SQLite',install:'git clone https://github.com/yourname/taskflow.git\ncd taskflow\nnpm install',usage:'npx taskflow add "牛乳を買う" --due tomorrow\nnpx taskflow list',codeLang:'bash',license:'MIT',author:'Your Name'};
+function build(){
+ const box=$('form');
+ GROUPS.forEach(g=>{
+  const fs=document.createElement('fieldset');
+  let h='<legend>'+g.t+'</legend>';
+  const fields=g.f.map(([id,lb,ty,ex])=>{
+   if(ty==='i')return `<label>${lb}<input id="${id}" placeholder="${ex}"></label>`;
+   if(ty==='t')return `<label>${lb}<textarea id="${id}" rows="3" placeholder="${ex}"></textarea></label>`;
+   return `<label>${lb}<select id="${id}">${ex.map(o=>Array.isArray(o)?`<option value="${o[0]}">${o[1]}</option>`:`<option>${o}</option>`).join('')}</select></label>`;
+  });
+  h+=g.row?`<div class="row">${fields.join('')}</div>`:fields.join('');
+  if(g.checks)h+='<div class="checks">'+g.checks.map(([id,lb])=>`<label><input type="checkbox" id="${id}" checked>${lb}</label>`).join('')+'</div>';
+  fs.innerHTML=h;box.appendChild(fs);
+ });
+}
+const IDS=[].concat(...GROUPS.map(g=>g.f.map(f=>f[0])),...GROUPS.filter(g=>g.checks).map(g=>g.checks.map(c=>c[0])));
+const v=id=>$(id).value.trim(), c=id=>$(id).checked;
+const block=(t,l)=>t.includes(F)?t:F+(l||'')+'\n'+t+'\n'+F;
+const slug=t=>t.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu,'').trim().replace(/\s+/g,'-');
+function gen(){
+ const en=v('lang')==='en',st=v('style'),min=st==='minimal',det=st==='detailed';
+ const T=en?{feat:'Features',stack:'Tech Stack',inst:'Installation',use:'Usage',con:'Contributing',lic:'License',toc:'Table of Contents'}:{feat:'特徴',stack:'使用技術',inst:'インストール',use:'使い方',con:'コントリビュート',lic:'ライセンス',toc:'目次'};
+ const u=v('ghUser'),r=v('repo'),lic=v('license'),o=[];
+ o.push('# '+(v('name')||'project-name'));
+ if(v('tagline'))o.push('','> '+v('tagline'));
+ if(c('sBadges')&&!min&&u&&r){
+  const b=`https://img.shields.io/github/`,p=`${u}/${r}`,bs=[];
+  if(lic!=='なし')bs.push(`![License](${b}license/${p})`);
+  bs.push(`![Stars](${b}stars/${p}?style=social)`,`![Issues](${b}issues/${p})`,`![Last commit](${b}last-commit/${p})`);
+  o.push('',bs.join(' '));
+ }
+ if(v('desc'))o.push('',v('desc'));
+ const S=[];
+ const lines=v('features').split('\n').map(x=>x.replace(/^[-*]\s*/,'').trim()).filter(Boolean);
+ if(c('sFeatures')&&lines.length)S.push([T.feat,lines.map(x=>'- '+x).join('\n')]);
+ const st2=v('stack').split(/[,、]/).map(x=>x.trim()).filter(Boolean);
+ if(c('sStack')&&!min&&st2.length)S.push([T.stack,st2.map(x=>'- '+x).join('\n')]);
+ if(c('sInstall')&&v('install'))S.push([T.inst,block(v('install'),'bash')]);
+ if(c('sUsage')&&v('usage'))S.push([T.use,block(v('usage'),v('codeLang'))]);
+ if(c('sContrib')&&!min){
+  S.push([T.con,det?(en?['Fork this repository','Create your branch: `git checkout -b feature/amazing-feature`','Commit your changes: `git commit -m "Add amazing feature"`','Push to the branch: `git push origin feature/amazing-feature`','Open a Pull Request']:['このリポジトリをフォークする','ブランチを作成する: `git checkout -b feature/amazing-feature`','変更をコミットする: `git commit -m "Add amazing feature"`','ブランチをプッシュする: `git push origin feature/amazing-feature`','Pull Request を作成する']).map((x,i)=>(i+1)+'. '+x).join('\n'):(en?'Issues and pull requests are welcome.':'Issue や Pull Request を歓迎します。')]);
+ }
+ if(c('sLicense')&&lic!=='なし'){
+  const y=new Date().getFullYear(),a=v('author');
+  S.push([T.lic,(en?`Distributed under the ${lic} License.`:`このプロジェクトは ${lic} ライセンスで公開されています。`)+(a?`\n\n© ${y} ${a}`:'')]);
+ }
+ if(det&&S.length)o.push('','## '+T.toc,'',...S.map(s=>`- [${s[0]}](#${slug(s[0])})`));
+ S.forEach(s=>o.push('','## '+s[0],'',s[1]));
+ return o.join('\n')+'\n';
+}
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const inl=s=>esc(s).replace(/!\[([^\]]*)\]\([^)]*\)/g,'<span class="chip">$1</span>').replace(/\[([^\]]+)\]\(((?:https?:|#)[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
+function md(src){
+ let h='',list='',fence=false,buf=[],para=[];
+ const endL=()=>{if(list){h+='</'+list+'>';list=''}};
+ const endP=()=>{if(para.length){h+='<p>'+para.map(inl).join('<br>')+'</p>';para=[]}};
+ for(const ln of src.split('\n')){
+  if(ln.startsWith(F)){
+   if(fence){h+='<pre><code>'+esc(buf.join('\n'))+'</code></pre>';buf=[];fence=false}
+   else{endP();endL();fence=true}
+   continue;
+  }
+  if(fence){buf.push(ln);continue}
+  let m;
+  if(!ln.trim()){endP();endL();continue}
+  if(m=ln.match(/^(#{1,3})\s+(.*)/)){endP();endL();h+=`<h${m[1].length} id="${slug(m[2])}">${inl(m[2])}</h${m[1].length}>`}
+  else if(m=ln.match(/^>\s?(.*)/)){endP();endL();h+='<blockquote>'+inl(m[1])+'</blockquote>'}
+  else if(/^---+$/.test(ln)){endP();endL();h+='<hr>'}
+  else if(m=ln.match(/^[-*]\s+(.*)/)){endP();if(list!=='ul'){endL();h+='<ul>';list='ul'}h+='<li>'+inl(m[1])+'</li>'}
+  else if(m=ln.match(/^\d+\.\s+(.*)/)){endP();if(list!=='ol'){endL();h+='<ol>';list='ol'}h+='<li>'+inl(m[1])+'</li>'}
+  else{endL();para.push(ln)}
+ }
+ endP();endL();return h;
+}
+function showPv(){$('pv').innerHTML=md($('md').value)}
+function update(){$('md').value=gen();showPv();save()}
+function save(){try{const s={};IDS.forEach(i=>s[i]=$(i).type==='checkbox'?c(i):$(i).value);localStorage.setItem('readme-maker',JSON.stringify(s))}catch(e){}}
+function fill(o){IDS.forEach(i=>{if(!(i in o))return;if($(i).type==='checkbox')$(i).checked=o[i];else $(i).value=o[i]})}
+function tab(pv){$('pv').hidden=!pv;$('md').hidden=pv;$('tPv').setAttribute('aria-selected',pv);$('tMd').setAttribute('aria-selected',!pv)}
+build();
+let saved=null;try{saved=JSON.parse(localStorage.getItem('readme-maker'))}catch(e){}
+fill(saved||Object.assign({style:'standard',lang:'ja'},SAMPLE));
+$('form').addEventListener('input',update);
+$('md').addEventListener('input',showPv);
+$('tPv').onclick=()=>tab(true);$('tMd').onclick=()=>tab(false);
+$('bSample').onclick=()=>{fill(SAMPLE);update()};
+$('bClear').onclick=()=>{IDS.forEach(i=>{if($(i).type!=='checkbox'&&$(i).tagName!=='SELECT')$(i).value=''});update()};
+$('pv').addEventListener('click',e=>{const a=e.target.closest('a');if(a&&a.getAttribute('href')[0]==='#'){e.preventDefault();const t=document.getElementById(a.getAttribute('href').slice(1));if(t)t.scrollIntoView({behavior:'smooth'})}});
+$('bCopy').onclick=async()=>{
+ const b=$('bCopy'),t=$('md').value,ok=()=>{b.textContent='コピーしました';setTimeout(()=>b.textContent='Markdown をコピー',1500)};
+ try{await navigator.clipboard.writeText(t);ok()}catch(e){const was=$('md').hidden;$('md').hidden=false;$('md').select();try{document.execCommand('copy');ok()}catch(_){}$('md').hidden=was}
+};
+(async()=>{
+ try{
+  const dl=window.claude&&await window.claude.use('downloads');
+  if(!dl)return;
+  const b=$('bDl'),label=b.textContent;
+  b.hidden=false;
+  b.onclick=async()=>{
+   const t=$('md').value;
+   if(!t.trim())return;
+   try{await dl.save({filename:'README.md',data:t});b.textContent='保存しました'}
+   catch(e){b.textContent=e&&e.code==='declined'?label:'保存できませんでした'}
+   setTimeout(()=>b.textContent=label,1800);
+  };
+ }catch(e){}
+})();
+update();
+</script>
+</body>
+</html>
