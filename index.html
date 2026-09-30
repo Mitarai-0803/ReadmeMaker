@@ -66,7 +66,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
       <span class="sp"></span>
       <button class="btn" id="bSample">サンプルを入れる</button>
       <button class="btn" id="bClear">クリア</button>
-      <button class="btn" id="bDl" hidden>README.md をダウンロード</button>
+      <button class="btn" id="bDl">README.md をダウンロード</button>
       <button class="btn pri" id="bCopy">Markdown をコピー</button>
     </div>
     <div class="pane" id="pv"></div>
@@ -176,20 +176,28 @@ $('bCopy').onclick=async()=>{
  const b=$('bCopy'),t=$('md').value,ok=()=>{b.textContent='コピーしました';setTimeout(()=>b.textContent='Markdown をコピー',1500)};
  try{await navigator.clipboard.writeText(t);ok()}catch(e){const was=$('md').hidden;$('md').hidden=false;$('md').select();try{document.execCommand('copy');ok()}catch(_){}$('md').hidden=was}
 };
-(async()=>{
- try{
-  const dl=window.claude&&await window.claude.use('downloads');
-  if(!dl)return;
-  const b=$('bDl'),label=b.textContent;
-  b.hidden=false;
-  b.onclick=async()=>{
-   const t=$('md').value;
-   if(!t.trim())return;
-   try{await dl.save({filename:'README.md',data:t});b.textContent='保存しました'}
-   catch(e){b.textContent=e&&e.code==='declined'?label:'保存できませんでした'}
-   setTimeout(()=>b.textContent=label,1800);
-  };
- }catch(e){}
+(()=>{
+ const b=$('bDl'),label=b.textContent;
+ const say=(m,ms)=>{b.textContent=m;setTimeout(()=>b.textContent=label,ms||2000)};
+ const manual=()=>{tab(false);$('md').focus();$('md').select();
+  say('全選択しました。コピーして README.md に貼り付けてください',6000)};
+ b.onclick=async()=>{
+  const t=$('md').value;
+  if(!t.trim())return;
+  let dl=null;
+  try{dl=window.claude?await window.claude.use('downloads'):null}catch(e){}
+  if(dl){
+   try{await dl.save({filename:'README.md',data:t});say('保存しました');return}
+   catch(e){if(e&&e.code==='declined'){b.textContent=label;return}}
+  }
+  try{
+   const u=URL.createObjectURL(new Blob([t],{type:'text/markdown;charset=utf-8'}));
+   const a=document.createElement('a');a.href=u;a.download='README.md';
+   document.body.appendChild(a);a.click();a.remove();
+   setTimeout(()=>URL.revokeObjectURL(u),4000);
+  }catch(e){}
+  setTimeout(manual,400);
+ };
 })();
 update();
 </script>
